@@ -5,12 +5,12 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float playerSpeed, jumpForce;
     private Rigidbody2D rb;
-    private bool isJumping;
+    private bool canJump;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        isJumping = false;
+        canJump = true;
     }
 
     private void Update()
@@ -23,17 +23,12 @@ public class PlayerMovement : MonoBehaviour
         {
             MoveRight();
         }
-        if (Input.GetKeyDown(KeyCode.Space)) isJumping = true;
-    }
-
-    private void FixedUpdate()
-    {
-        if (isJumping) Jump();
+        if (Input.GetKeyDown(KeyCode.Space) && canJump) Jump();
     }
 
     public void MoveRight()
     {
-        Move(1);        
+        Move(1);
     }
 
     public void MoveLeft()
@@ -46,12 +41,20 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(playerSpeed * direction, rb.velocity.y);
     }
 
-    private void Jump()
+    public void Jump()
     {
-        if (rb.velocity.y == 0)
+        if (canJump)
         {
             rb.AddForce(new Vector2(0, jumpForce));
-            isJumping = false;
+            canJump = false;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Vector2 collisionNormal = collision.contacts[0].normal;
+            if (collisionNormal.y > 0) canJump = true;
         }
     }
 }
