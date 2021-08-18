@@ -5,7 +5,9 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float playerSpeed, jumpForce;
     private Rigidbody2D rb;
-    private bool canJump;
+    [SerializeField] private bool canJump;
+
+    public Joystick joystick;
 
     private void Awake()
     {
@@ -15,31 +17,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.A))
-        {
-            MoveLeft();
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            MoveRight();
-        }
+        Move();
         if (Input.GetKeyDown(KeyCode.Space) && canJump) Jump();
     }
 
-    public void MoveRight()
+    private void Move()
     {
-        Move(1);
-    }
-
-    public void MoveLeft()
-    {
-        Move(-1);
-    }
-
-    private void Move(int direction)
-    {
-        rb.velocity = new Vector2(playerSpeed * direction, rb.velocity.y);
-    }
+        rb.velocity = new Vector2(playerSpeed * joystick.Horizontal, rb.velocity.y);
+    }    
 
     public void Jump()
     {
