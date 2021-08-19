@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class GameplayController : MonoBehaviour
 {
-    [SerializeField] private Animator animFade, animTextFinish, animTextGO;
+    [SerializeField] private Animator animFade, animTextFinish, animTextGO, animUI;
     [SerializeField] private GameObject pauseScreen, gameplayUI;
     [SerializeField] private float timeBeforeText;
-
 
 
     private void Update()
@@ -20,7 +19,14 @@ public class GameplayController : MonoBehaviour
         {
             StartCoroutine(Finish(animTextGO));
         }
-
+        if (PlayerController.isActivated)
+        {
+            animUI.SetTrigger("Show");
+        }
+        if (PlayerController.isDeactivated)
+        {
+            animUI.SetTrigger("Hide");
+        }
     }
 
     private IEnumerator Finish(Animator anim)
@@ -51,5 +57,10 @@ public class GameplayController : MonoBehaviour
     {
         Time.timeScale = 1;
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+    public void LoadMenu()
+    {
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }

@@ -4,7 +4,7 @@ public class UnlockDoor : MonoBehaviour
 {
     private void Update()
     {
-        if (ButtonScript.buttonAPressed && ButtonScript.buttonBPressed)
+        if (ButtonActivation.isButtonAPressed && ButtonActivation.isButtonBPressed)
         {
             gameObject.SetActive(false);
         }

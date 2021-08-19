@@ -15,21 +15,23 @@ public class PlayerMovement : MonoBehaviour
         canJump = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Move();
-        if (Input.GetKeyDown(KeyCode.Space) && canJump) Jump();
+        if (joystick.Horizontal >= 0.2f) Move();
+        else if (joystick.Horizontal <= -0.2f) Move();
+        else rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
     }
 
     private void Move()
     {
-        rb.velocity = new Vector2(playerSpeed * joystick.Horizontal, rb.velocity.y);
+        rb.velocity = new Vector2(playerSpeed * joystick.Horizontal * Time.fixedDeltaTime, rb.velocity.y);
     }    
 
     public void Jump()
     {
         if (canJump)
         {
+            AudioManager.instance.PlaySound(AudioManager.JUMP_SOUND);
             rb.AddForce(new Vector2(0, jumpForce));
             canJump = false;
         }
