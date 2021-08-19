@@ -5,22 +5,30 @@ using UnityEngine;
 public class GameplayController : MonoBehaviour
 {
     [SerializeField] private Animator animFade, animTextFinish, animTextGO, animUI;
-    [SerializeField] private GameObject pauseScreen, gameplayUI;
+    [SerializeField] private GameObject pauseScreen, gameplayUI, finishScreen, gameOverScreen;
     [SerializeField] private float timeBeforeText;
 
+
+    private void Start()
+    {
+        finishScreen.SetActive(false);
+        gameOverScreen.SetActive(false);
+        gameplayUI.SetActive(false);
+    }
 
     private void Update()
     {
         if (PlayerController.isFinished)
         {
-            StartCoroutine(Finish(animTextFinish));
+            StartCoroutine(Finish(animTextFinish, finishScreen));
         }
         if (PlayerController.isDead)
         {
-            StartCoroutine(Finish(animTextGO));
+            StartCoroutine(Finish(animTextGO, gameOverScreen));
         }
         if (PlayerController.isActivated)
         {
+            gameplayUI.SetActive(true);
             animUI.SetTrigger("Show");
         }
         if (PlayerController.isDeactivated)
@@ -29,10 +37,11 @@ public class GameplayController : MonoBehaviour
         }
     }
 
-    private IEnumerator Finish(Animator anim)
+    private IEnumerator Finish(Animator anim, GameObject screen)
     {
         animFade.SetTrigger("Start");
         yield return new WaitForSeconds(timeBeforeText);
+        screen.SetActive(true);
         anim.SetTrigger("Start");
     }    
 
